@@ -86,6 +86,30 @@
     <fieldType name="tfloat" class="solr.TrieFloatField" omitNorms="true"/>
     <!-- *** This fieldType is used by Sunspot! *** -->
     <fieldType name="tdate" class="solr.TrieDateField" omitNorms="true"/>
+    <!-- *** This fieldType is used by Sunspot autocomplete! *** -->
+    <fieldType name="autocomplete" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+        <tokenizer class="solr.KeywordTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="25" />
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.KeywordTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+    </fieldType>
+    <!-- *** This fieldType is used by Sunspot autocomplete! *** -->
+    <fieldType name="autosuggest" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+        <tokenizer class="solr.LetterTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="25" />
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.LetterTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+    </fieldType>
     <!-- *** This fieldType is used by Sunspot solar_cell! *** -->
     <fieldType name="ignored" stored="false" indexed="false" multiValued="true" class="solr.StrField" />
   </types>
@@ -118,9 +142,9 @@
     <!-- *** This field is used by Sunspot! *** -->
     <field name="id" stored="true" type="string" multiValued="false" indexed="true"/>
     <!-- *** This field is used by Sunspot! *** -->
-    <field name="type" stored="false" type="string" multiValued="true" indexed="true"/>
+    <field name="type" stored="true" type="string" multiValued="true" indexed="true"/>
     <!-- *** This field is used by Sunspot! *** -->
-    <field name="class_name" stored="false" type="string" multiValued="false" indexed="true"/>
+    <field name="class_name" stored="true" type="string" multiValued="false" indexed="true"/>
     <!-- *** This field is used by Sunspot! *** -->
     <field name="text" stored="false" type="string" multiValued="true" indexed="true"/>
     <!-- *** This field is used by Sunspot! *** -->
@@ -227,6 +251,10 @@
     <dynamicField name="*_ets" stored="true" termVectors="true" type="tdouble" multiValued="false" indexed="true"/>
     <!-- *** This dynamicField is used by Sunspot! *** -->
     <dynamicField name="*_etms" stored="true" termVectors="true" type="tdouble" multiValued="true" indexed="true"/>
+    <!-- *** This fieldType is used by Sunspot autocomplete! *** -->
+    <dynamicField name="*_ac" type="autocomplete" indexed="true"  stored="true"/>
+    <!-- *** This fieldType is used by Sunspot autocomplete! *** -->
+    <dynamicField name="*_as" type="autosuggest" indexed="true"  stored="true"/>
     <!-- *** This dynamicField is used by Sunspot solar_cell! *** -->
     <dynamicField name="*_attachment" stored="true" type="text" multiValued="true" indexed="true"/>
     <!-- *** This dynamicField is used by Sunspot solar_cell! *** -->
