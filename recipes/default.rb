@@ -12,7 +12,6 @@ include_recipe "tomcat"
 
 node.set[:solr][:contrib_dir] = "#{node[:solr][:root]}/contrib"
 node.set[:solr][:dist_dir] = "#{node[:solr][:root]}/dist"
-node.set[:solr][:webapp_dir] = "#{node[:solr][:root]}/webapp"
 
 node.set[:solr][:instance][:home] = "#{node[:solr][:root]}/instance"
 node.set[:solr][:instance][:conf_dir] = "#{node[:solr][:instance][:home]}/conf"
@@ -22,7 +21,6 @@ node.set[:solr][:instance][:lib_dir] = "#{node[:solr][:instance][:home]}/lib"
 create_dirs = [
   node.set[:solr][:contrib_dir],
   node.set[:solr][:dist_dir],
-  node.set[:solr][:webapp_dir],
 
   node.set[:solr][:instance][:home],
   node.set[:solr][:instance][:conf_dir],
@@ -39,14 +37,6 @@ create_dirs.each do |path|
   end
 end
 
-template "#{node[:tomcat][:context_dir]}/solr.xml" do
-  source "tomcat_context.xml.erb"
-  owner node[:tomcat][:user]
-  group node[:tomcat][:group]
-  mode "0644"
-  notifies :restart, "service[tomcat6]"
-end
-
 version = node[:solr][:version]
 
 remote_file "#{Chef::Config[:file_cache_path]}/apache-solr-#{version}.tgz" do
@@ -61,12 +51,9 @@ bash "install_solr" do
 
     rsync -a --delete-delay apache-solr-#{version}/dist/ #{node[:solr][:dist_dir]}
     rsync -a --delete-delay apache-solr-#{version}/contrib/ #{node[:solr][:contrib_dir]}
-    cp apache-solr-#{version}/dist/apache-solr-#{version}.war #{node[:solr][:webapp_dir]}/
-
   EOH
-    #rm -rf #{tmp}/apache-solr-#{version}
 
-  not_if { ::File.exists?("#{node[:solr][:webapp_dir]}/apache-solr-#{version}.war") }
+  not_if { ::File.exists?("#{node[:solr][:dist_dir]}/apache-solr-#{version}.war") }
   notifies :restart, "service[tomcat6]"
 end
 
@@ -86,4 +73,12 @@ end
     mode "0644"
     notifies :restart, "service[tomcat6]"
   end
+end
+
+template "#{node[:tomcat][:context_dir]}/solr.xml" do
+  source "tomcat_context.xml.erb"
+  owner node[:tomcat][:user]
+  group node[:tomcat][:group]
+  mode "0644"
+  notifies :restart, "service[tomcat6]"
 end

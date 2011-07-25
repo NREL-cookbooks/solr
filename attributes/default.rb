@@ -9,7 +9,7 @@
 
 default[:solr][:root] = "/opt/solr"
 
-default[:solr][:version] = "3.2.0"
-default[:solr][:archive_checksum] = "4852e866f77ba2e4dc1639610316a64d384531d00d7e8963e0984ad11e6d2b5a"
+default[:solr][:version] = "3.3.0"
+default[:solr][:archive_checksum] = "9a3e1d16ccccacd2b55bba73cd76803f6c37c1e8dc5b3b071dc33dc4e443d70b"
 
 default[:solr][:clustering][:enabled] = true
