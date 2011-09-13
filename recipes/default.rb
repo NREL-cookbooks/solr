@@ -54,7 +54,7 @@ bash "install_solr" do
   EOH
 
   not_if { ::File.exists?("#{node[:solr][:dist_dir]}/apache-solr-#{version}.war") }
-  notifies :restart, "service[tomcat6]"
+  notifies :restart, "service[tomcat]"
 end
 
 template "#{node[:solr][:instance][:home]}/solr.xml" do
@@ -62,7 +62,7 @@ template "#{node[:solr][:instance][:home]}/solr.xml" do
   owner node[:tomcat][:user]
   group node[:tomcat][:group]
   mode "0644"
-  notifies :restart, "service[tomcat6]"
+  notifies :restart, "service[tomcat]"
 end
 
 %w{elevate.xml mapping-FoldToASCII.txt mapping-ISOLatin1Accent.txt protwords.txt schema.xml scripts.conf solrconfig.xml spellings.txt stopwords.txt synonyms.txt}.each do |file|
@@ -71,7 +71,7 @@ end
     owner node[:tomcat][:user]
     group node[:tomcat][:group]
     mode "0644"
-    notifies :restart, "service[tomcat6]"
+    notifies :restart, "service[tomcat]"
   end
 end
 
@@ -80,5 +80,5 @@ template "#{node[:tomcat][:context_dir]}/solr.xml" do
   owner node[:tomcat][:user]
   group node[:tomcat][:group]
   mode "0644"
-  notifies :restart, "service[tomcat6]"
+  notifies :restart, "service[tomcat]"
 end
