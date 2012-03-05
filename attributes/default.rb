@@ -9,8 +9,8 @@
 
 default[:solr][:root] = "/opt/solr"
 
-default[:solr][:version] = "3.3.0"
-default[:solr][:archive_checksum] = "9a3e1d16ccccacd2b55bba73cd76803f6c37c1e8dc5b3b071dc33dc4e443d70b"
+default[:solr][:version] = "3.5.0"
+default[:solr][:archive_checksum] = "804f3ba9d1296f81388605a79538b7362355693fbdd03b7b2dbf9a706bf1d1d0"
 
 default[:solr][:test_core][:enabled] = false
 

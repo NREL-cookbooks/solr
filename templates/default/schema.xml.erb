@@ -44,7 +44,7 @@
   - Remember to run the JVM in server mode, and use a higher logging level
     that avoids logging every request
 -->
-<schema name="sunspot" version="1.4">
+<schema name="sunspot" version="1.0">
   <types>
     <!-- field type definitions. The "name" attribute is
        just a label to be used by field definitions.  The "class"
@@ -87,6 +87,10 @@
     <fieldType name="tfloat" class="solr.TrieFloatField" omitNorms="true"/>
     <!-- *** This fieldType is used by Sunspot! *** -->
     <fieldType name="tdate" class="solr.TrieDateField" omitNorms="true"/>
+
+    <!-- A specialized field for geospatial search. If indexed, this fieldType must not be multivalued. -->
+    <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate"/>
+
     <!-- *** This fieldType is used by Sunspot autocomplete! *** -->
     <fieldType name="autocomplete" class="solr.TextField" positionIncrementGap="100">
       <analyzer type="index">
@@ -117,7 +121,7 @@
   <fields>
     <!-- Valid attributes for fields:
      name: mandatory - the name for the field
-     type: mandatory - the name of a previously defined type from the 
+     type: mandatory - the name of a previously defined type from the
        <types> section
      indexed: true if this field should be indexed (searchable or sortable)
      stored: true if this field should be retrievable
@@ -143,9 +147,9 @@
     <!-- *** This field is used by Sunspot! *** -->
     <field name="id" stored="true" type="string" multiValued="false" indexed="true"/>
     <!-- *** This field is used by Sunspot! *** -->
-    <field name="type" stored="true" type="string" multiValued="true" indexed="true"/>
+    <field name="type" stored="false" type="string" multiValued="true" indexed="true"/>
     <!-- *** This field is used by Sunspot! *** -->
-    <field name="class_name" stored="true" type="string" multiValued="false" indexed="true"/>
+    <field name="class_name" stored="false" type="string" multiValued="false" indexed="true"/>
     <!-- *** This field is used by Sunspot! *** -->
     <field name="text" stored="false" type="string" multiValued="true" indexed="true"/>
     <!-- *** This field is used by Sunspot! *** -->
@@ -252,6 +256,16 @@
     <dynamicField name="*_ets" stored="true" termVectors="true" type="tdouble" multiValued="false" indexed="true"/>
     <!-- *** This dynamicField is used by Sunspot! *** -->
     <dynamicField name="*_etms" stored="true" termVectors="true" type="tdouble" multiValued="true" indexed="true"/>
+
+    <!-- Type used to index the lat and lon components for the "location" FieldType -->
+    <dynamicField name="*_coordinate"  type="tdouble" indexed="true"  stored="false" multiValued="false"/>
+    <dynamicField name="*_p" type="location" indexed="true" stored="true" multiValued="false"/>
+
+    <dynamicField name="*_ll" stored="false" type="location" multiValued="false" indexed="true"/>
+    <dynamicField name="*_llm" stored="false" type="location" multiValued="true" indexed="true"/>
+    <dynamicField name="*_lls" stored="true" type="location" multiValued="false" indexed="true"/>
+    <dynamicField name="*_llms" stored="true" type="location" multiValued="true" indexed="true"/>
+
     <!-- *** This fieldType is used by Sunspot autocomplete! *** -->
     <dynamicField name="*_ac" type="autocomplete" indexed="true"  stored="true"/>
     <!-- *** This fieldType is used by Sunspot autocomplete! *** -->
@@ -261,7 +275,7 @@
     <!-- *** This dynamicField is used by Sunspot solar_cell! *** -->
     <dynamicField name="ignored_*" type="ignored"/>
   </fields>
-  <!-- Field to use to determine and enforce document uniqueness. 
+  <!-- Field to use to determine and enforce document uniqueness.
       Unless this field is marked with required="false", it will be a required field
    -->
   <uniqueKey>id</uniqueKey>
