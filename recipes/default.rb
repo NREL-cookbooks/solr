@@ -40,7 +40,7 @@ end
 version = node[:solr][:version]
 
 remote_file "#{Chef::Config[:file_cache_path]}/apache-solr-#{version}.tgz" do
-  source "http://apache.cs.utah.edu/lucene/solr/#{version}/apache-solr-#{version}.tgz"
+  source "http://archive.apache.org/dist/lucene/solr/#{version}/apache-solr-#{version}.tgz"
   checksum node[:solr][:archive_checksum]
 end
 
